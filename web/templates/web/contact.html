@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}İletişim - RandevuPro{% endblock %}
+{% block content %}
+<!-- Hero -->
+<section class="relative py-12 sm:py-16 overflow-hidden bg-gradient-to-br from-slate-100 to-indigo-50 dark:from-gray-900 dark:to-indigo-950/30">
+    <div class="absolute top-0 right-0 w-72 h-72 bg-indigo-200/40 dark:bg-indigo-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+    <div class="relative max-w-4xl mx-auto px-4 text-center">
+        <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-4 animate-fade-in-up">İletişim</h1>
+        <p class="text-slate-600 dark:text-gray-400 max-w-2xl mx-auto animate-fade-in-up animate-delay-100">
+            Sorularınız, teknik destek veya iş birliği talepleriniz için aşağıdaki kanallardan bize ulaşın. Hafta içi çalışma saatlerinde yanıt veriyoruz.
+        </p>
+    </div>
+</section>
+
+<!-- Contact cards -->
+<section class="py-16 bg-white dark:bg-gray-900/50">
+    <div class="max-w-4xl mx-auto px-4">
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="rounded-2xl border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 shadow-lg hover:shadow-xl transition animate-fade-in-up">
+                <div class="w-14 h-14 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-2xl mb-4">✉️</div>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Genel destek</h2>
+                <p class="text-indigo-600 dark:text-indigo-400 font-medium">destek@randevupro.com</p>
+                <p class="text-sm text-slate-500 dark:text-gray-400 mt-2">Fiyatlandırma, teknik sorular ve kullanım desteği.</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 shadow-lg hover:shadow-xl transition animate-fade-in-up animate-delay-100">
+                <div class="w-14 h-14 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-2xl mb-4">💼</div>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Kurumsal ve satış</h2>
+                <p class="text-indigo-600 dark:text-indigo-400 font-medium">satis@randevupro.com</p>
+                <p class="text-sm text-slate-500 dark:text-gray-400 mt-2">Kurumsal plan, çok şubeli işletmeler ve özel anlaşmalar.</p>
+            </div>
+        </div>
+
+        <div class="mt-8 rounded-2xl border border-slate-200 dark:border-gray-700 bg-slate-50/50 dark:bg-gray-800/50 p-8 animate-fade-in-up">
+            <h3 class="font-semibold text-slate-900 dark:text-white mb-2">Web</h3>
+            <a href="https://randevupro.com" class="text-indigo-600 dark:text-indigo-400 font-medium hover:underline">randevupro.com</a>
+        </div>
+
+        <div class="mt-8 rounded-2xl border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 animate-fade-in-up">
+            <p class="text-slate-600 dark:text-gray-400 leading-relaxed mb-4">
+                Ödeme entegrasyonu, SMS/WhatsApp bildirimleri veya kendi yazılımınızla API entegrasyonu gibi özelleştirme taleplerinizi e-posta ile iletebilirsiniz. Veri güvenliği için <a href="{% url 'web:privacy' %}" class="text-indigo-600 dark:text-indigo-400 font-medium hover:underline">Gizlilik Politikamızı</a> inceleyebilirsiniz.
+            </p>
+            <p class="text-sm text-slate-500 dark:text-gray-500">
+                RandevuPro Türkiye merkezli bir hizmet olup iletişim dili Türkçe'dir. Yurt dışından talepler için İngilizce e-posta da kabul edilmektedir.
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,143 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr" class="h-full" x-data="{ dark: localStorage.getItem('theme') === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches }" x-init="$watch('dark', value => { localStorage.setItem('theme', value ? 'dark' : 'light'); document.documentElement.classList.toggle('dark', value); })" :class="{ 'dark': dark }">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}RandevuPro{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            animation: {
+              'fade-in': 'fadeIn 0.5s ease-out',
+              'fade-in-up': 'fadeInUp 0.6s ease-out',
+              'slide-in-right': 'slideInRight 0.4s ease-out',
+            },
+            keyframes: {
+              fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+              fadeInUp: { '0%': { opacity: '0', transform: 'translateY(12px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+              slideInRight: { '0%': { opacity: '0', transform: 'translateX(8px)' }, '100%': { opacity: '1', transform: 'translateX(0)' } },
+            },
+          },
+        },
+      }
+    </script>
+    <style>
+      .input { display: block; width: 100%; border-radius: 0.5rem; border: 1px solid #d1d5db; background: #fff; padding: 0.5rem 0.75rem; color: #111; transition: border-color .2s, box-shadow .2s; }
+      .input:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,.2); }
+      .dark .input { border-color: #4b5563; background: #1f2937; color: #f3f4f6; }
+      .dark .input:focus { border-color: #818cf8; box-shadow: 0 0 0 3px rgba(129,140,248,.2); }
+      .animate-delay-100 { animation-delay: 100ms; }
+      .animate-delay-200 { animation-delay: 200ms; }
+      .animate-delay-300 { animation-delay: 300ms; }
+    </style>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.0"></script>
+</head>
+<body class="h-full bg-slate-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 antialiased">
+<div class="min-h-screen flex flex-col">
+    <header class="sticky top-0 z-50 border-b border-slate-200/80 dark:border-gray-800 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-3">
+            <div class="flex items-center justify-between gap-4">
+                <a href="{% url 'web:home' %}" class="font-bold text-xl tracking-tight shrink-0 transition hover:opacity-90">
+                    <span class="text-indigo-600 dark:text-indigo-400">Randevu</span><span class="text-slate-800 dark:text-white">Pro</span>
+                </a>
+                <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+                    <a href="{% url 'web:home' %}" class="px-3 py-2 rounded-lg text-slate-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-gray-800 transition">Ana Sayfa</a>
+                    <a href="{% url 'web:pricing' %}" class="px-3 py-2 rounded-lg text-slate-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-gray-800 transition">Fiyatlar</a>
+                    <a href="{% url 'web:contact' %}" class="px-3 py-2 rounded-lg text-slate-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-gray-800 transition">İletişim</a>
+                    <a href="{% url 'web:terms' %}" class="px-3 py-2 rounded-lg text-slate-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-gray-800 transition">Kullanım Koşulları</a>
+                    <a href="{% url 'web:privacy' %}" class="px-3 py-2 rounded-lg text-slate-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-gray-800 transition">Gizlilik</a>
+                </nav>
+                <div class="flex items-center gap-2 shrink-0">
+                    <button type="button"
+                            class="inline-flex items-center justify-center rounded-full w-9 h-9 border border-slate-200 dark:border-gray-700 hover:bg-slate-100 dark:hover:bg-gray-800 transition"
+                            @click="dark = !dark"
+                            :aria-label="dark ? 'Açık moda geç' : 'Karanlık moda geç'">
+                        <span x-show="!dark">🌙</span>
+                        <span x-show="dark">☀️</span>
+                    </button>
+                    {% if request.user.is_authenticated %}
+                        <a href="{% url 'web:dashboard' %}" class="inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-md hover:bg-indigo-500 hover:shadow-lg transition">
+                            Panel
+                        </a>
+                    {% else %}
+                        <a href="{% url 'web:login' %}" class="inline-flex items-center rounded-lg border border-slate-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-800 transition">
+                            Giriş yap
+                        </a>
+                        <a href="{% url 'web:register' %}" class="inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-md hover:bg-indigo-500 hover:shadow-lg transition">
+                            Kayıt ol
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="md:hidden mt-3 pt-3 border-t border-slate-200 dark:border-gray-700 flex flex-wrap gap-2 text-sm">
+                <a href="{% url 'web:home' %}" class="px-2 py-1 rounded text-slate-600 dark:text-gray-400 hover:text-indigo-600 hover:bg-slate-100">Ana Sayfa</a>
+                <a href="{% url 'web:pricing' %}" class="px-2 py-1 rounded text-slate-600 dark:text-gray-400 hover:text-indigo-600 hover:bg-slate-100">Fiyatlar</a>
+                <a href="{% url 'web:contact' %}" class="px-2 py-1 rounded text-slate-600 dark:text-gray-400 hover:text-indigo-600 hover:bg-slate-100">İletişim</a>
+                <a href="{% url 'web:terms' %}" class="px-2 py-1 rounded text-slate-600 dark:text-gray-400 hover:text-indigo-600 hover:bg-slate-100">Kullanım Koşulları</a>
+                <a href="{% url 'web:privacy' %}" class="px-2 py-1 rounded text-slate-600 dark:text-gray-400 hover:text-indigo-600 hover:bg-slate-100">Gizlilik</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1">
+        {% if messages %}
+            <div class="max-w-3xl mx-auto mt-4 px-4 space-y-2"
+                 x-data="{ show: true }"
+                 x-show="show"
+                 x-transition
+                 x-init="setTimeout(() => show = false, 4000)">
+                {% for message in messages %}
+                    <div class="rounded-md border px-4 py-2 text-sm
+                                {% if message.tags == 'success' %}border-emerald-300 bg-emerald-50 text-emerald-900 dark:border-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-100
+                                {% elif message.tags == 'error' %}border-red-300 bg-red-50 text-red-900 dark:border-red-700 dark:bg-red-900/40 dark:text-red-100
+                                {% else %}border-gray-200 bg-white text-gray-900 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="mt-auto border-t border-slate-200 dark:border-gray-800 bg-slate-100 dark:bg-gray-900/80">
+        <div class="max-w-6xl mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+                <div class="md:col-span-2">
+                    <p class="font-bold text-lg text-slate-900 dark:text-white mb-3"><span class="text-indigo-600 dark:text-indigo-400">Randevu</span>Pro</p>
+                    <p class="text-sm text-slate-600 dark:text-gray-400 max-w-md leading-relaxed">
+                        RandevuPro, Türkiye'deki kuaför salonları, güzellik merkezleri, klinikler ve diğer hizmet işletmeleri için tasarlanmış randevu yönetimi ve müşteri ilişkileri (CRM) platformudur. Müşterileriniz online randevu alabilsin, siz de takviminizi ve müşteri kayıtlarınızı tek yerden yönetin.
+                    </p>
+                </div>
+                <div>
+                    <p class="font-semibold text-slate-900 dark:text-white mb-3 text-sm uppercase tracking-wider">Hızlı bağlantılar</p>
+                    <ul class="space-y-2 text-sm text-slate-600 dark:text-gray-400">
+                        <li><a href="{% url 'web:home' %}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Ana Sayfa</a></li>
+                        <li><a href="{% url 'web:pricing' %}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Fiyatlar</a></li>
+                        <li><a href="{% url 'web:contact' %}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">İletişim</a></li>
+                        <li><a href="{% url 'web:register' %}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Ücretsiz dene</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="font-semibold text-slate-900 dark:text-white mb-3 text-sm uppercase tracking-wider">Yasal</p>
+                    <ul class="space-y-2 text-sm text-slate-600 dark:text-gray-400">
+                        <li><a href="{% url 'web:terms' %}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Kullanım Koşulları</a></li>
+                        <li><a href="{% url 'web:privacy' %}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Gizlilik Politikası</a></li>
+                    </ul>
+                    <p class="mt-4 text-sm text-slate-500 dark:text-gray-500">destek@randevupro.com</p>
+                    <p class="text-sm text-slate-500 dark:text-gray-500">randevupro.com</p>
+                </div>
+            </div>
+            <div class="mt-10 pt-8 border-t border-slate-200 dark:border-gray-800 text-center text-xs text-slate-500 dark:text-gray-400">
+                &copy; {% now "Y" %} RandevuPro. Tüm hakları saklıdır. Bu site Türkiye Cumhuriyeti mevzuatına uygun olarak işletilmektedir.
+            </div>
+        </div>
+    </footer>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,15 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Yardım - RandevuPro{% endblock %}
+{% block page_title %}Yardım{% endblock %}
+{% block content %}
+<div class="max-w-2xl prose dark:prose-invert">
+    <h2>Sıkça sorulan sorular</h2>
+    <h3>Randevu nasıl eklerim?</h3>
+    <p>Randevular sayfasından veya API <code>POST /api/v1/appointments/</code> ile ekleyebilirsiniz. Müşteri ve hizmet önceden tanımlı olmalıdır.</p>
+    <h3>Müşteri giriş yapmadan randevu alabilir mi?</h3>
+    <p>Evet. MVP'de müşteri rolü yoktur; herkese açık booking sayfası (<code>/b/&lt;slug&gt;/</code>) veya <code>POST /api/v1/public/book/</code> ile randevu oluşturulabilir.</p>
+    <h3>API dokümantasyonu nerede?</h3>
+    <p>Proje çalışırken <code>/api/schema/swagger-ui/</code> adresinden OpenAPI (Swagger) arayüzüne erişebilirsiniz.</p>
+    <p class="text-sm text-gray-500 mt-8">Destek: destek@randevupro.com</p>
+</div>
+{% endblock %}

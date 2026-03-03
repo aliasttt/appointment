@@ -1,0 +1,25 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Ayarlar - RandevuPro{% endblock %}
+{% block page_title %}Ayarlar{% endblock %}
+{% block content %}
+<div class="max-w-2xl space-y-6">
+    <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
+        <h2 class="text-lg font-semibold mb-4">İşletme bilgileri</h2>
+        <dl class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+            <dt class="text-gray-500 dark:text-gray-400">İşletme adı</dt>
+            <dd>{{ business.name }}</dd>
+            <dt class="text-gray-500 dark:text-gray-400">Randevu sayfası</dt>
+            <dd><a href="{% url 'web:booking' business.slug %}" class="text-indigo-600 dark:text-indigo-400">/b/{{ business.slug }}/</a></dd>
+            <dt class="text-gray-500 dark:text-gray-400">Telefon</dt>
+            <dd>{{ business.phone|default:"—" }}</dd>
+            <dt class="text-gray-500 dark:text-gray-400">Adres</dt>
+            <dd>{{ business.address|default:"—" }}</dd>
+        </dl>
+        <p class="mt-4 text-sm text-gray-500">İşletme düzenleme formu MVP dışındadır; API veya admin panelinden güncellenebilir.</p>
+    </div>
+    <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
+        <h2 class="text-lg font-semibold mb-4">Randevu ayarları</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Çalışma saatleri ve randevu kuralları (working_hours, booking_settings) API/Admin üzerinden yönetilir.</p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Fiyatlar - RandevuPro{% endblock %}
+{% block content %}
+<!-- Hero -->
+<section class="relative py-12 sm:py-16 overflow-hidden bg-gradient-to-br from-indigo-600 to-slate-800 dark:from-indigo-950 dark:to-slate-950 text-white">
+    <div class="absolute inset-0 opacity-30">
+        <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1920&q=80" alt="" class="w-full h-full object-cover">
+    </div>
+    <div class="relative max-w-4xl mx-auto px-4 text-center">
+        <h1 class="text-3xl sm:text-4xl font-bold mb-4 animate-fade-in-up">Fiyatlandırma</h1>
+        <p class="text-indigo-100 max-w-2xl mx-auto animate-fade-in-up animate-delay-100">
+            İşletme büyüklüğünüze göre esnek planlar. Tüm planlarda randevu takvimi, müşteri listesi ve hizmet yönetimi; üst planlarda daha fazla işletme, bildirimler ve API erişimi.
+        </p>
+        <p class="text-indigo-200/90 text-sm mt-2">Yıllık ödemede %20 indirim. Ödeme altyapısı yakında devrede.</p>
+    </div>
+</section>
+
+<!-- Plans -->
+<section class="py-16 bg-white dark:bg-gray-900/50">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="rounded-2xl border-2 border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 shadow-lg hover:shadow-xl hover:border-indigo-200 dark:hover:border-indigo-800/50 transition animate-fade-in-up">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Başlangıç</h2>
+                <p class="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mt-2">₺199<span class="text-base font-normal text-slate-500">/ay</span></p>
+                <p class="text-sm text-slate-500 dark:text-gray-400 mt-1">Küçük işletmeler için</p>
+                <ul class="mt-6 space-y-3 text-sm text-slate-600 dark:text-gray-400">
+                    <li class="flex items-center gap-2">✓ 1 işletme</li>
+                    <li class="flex items-center gap-2">✓ Randevu takvimi ve liste</li>
+                    <li class="flex items-center gap-2">✓ Müşteri listesi ve notlar</li>
+                    <li class="flex items-center gap-2">✓ Hizmet ve süre tanımları</li>
+                    <li class="flex items-center gap-2">✓ E-posta desteği</li>
+                </ul>
+                <a href="{% url 'web:register' %}" class="mt-8 block w-full text-center rounded-xl border-2 border-slate-300 dark:border-gray-600 px-4 py-3 text-sm font-semibold text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-700 transition">Başla</a>
+            </div>
+
+            <div class="rounded-2xl border-2 border-indigo-500 dark:border-indigo-400 bg-white dark:bg-gray-800 p-8 shadow-xl relative animate-fade-in-up animate-delay-100">
+                <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-semibold px-3 py-1 rounded-full">Önerilen</span>
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Profesyonel</h2>
+                <p class="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mt-2">₺399<span class="text-base font-normal text-slate-500">/ay</span></p>
+                <p class="text-sm text-slate-500 dark:text-gray-400 mt-1">Büyüyen işletmeler için</p>
+                <ul class="mt-6 space-y-3 text-sm text-slate-600 dark:text-gray-400">
+                    <li class="flex items-center gap-2">✓ 3 işletmeye kadar</li>
+                    <li class="flex items-center gap-2">✓ SMS bildirimleri (entegrasyon sonrası)</li>
+                    <li class="flex items-center gap-2">✓ Randevu ve gelir raporları</li>
+                    <li class="flex items-center gap-2">✓ Öncelikli e-posta destek</li>
+                    <li class="flex items-center gap-2">✓ Özelleştirilebilir randevu sayfası</li>
+                </ul>
+                <a href="{% url 'web:register' %}" class="mt-8 block w-full text-center rounded-xl bg-indigo-600 text-white px-4 py-3 text-sm font-semibold hover:bg-indigo-500 shadow-lg hover:shadow-xl transition">Seç</a>
+            </div>
+
+            <div class="rounded-2xl border-2 border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 shadow-lg hover:shadow-xl hover:border-indigo-200 dark:hover:border-indigo-800/50 transition animate-fade-in-up animate-delay-200">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Kurumsal</h2>
+                <p class="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mt-2">₺799<span class="text-base font-normal text-slate-500">/ay</span></p>
+                <p class="text-sm text-slate-500 dark:text-gray-400 mt-1">Zincir ve çok şubeli yapılar</p>
+                <ul class="mt-6 space-y-3 text-sm text-slate-600 dark:text-gray-400">
+                    <li class="flex items-center gap-2">✓ Sınırsız işletme</li>
+                    <li class="flex items-center gap-2">✓ REST API (mobil uygulama vb.)</li>
+                    <li class="flex items-center gap-2">✓ Öncelikli teknik destek</li>
+                    <li class="flex items-center gap-2">✓ Özel entegrasyon talepleri</li>
+                    <li class="flex items-center gap-2">✓ Fatura ve sözleşme yönetimi</li>
+                </ul>
+                <a href="{% url 'web:contact' %}" class="mt-8 block w-full text-center rounded-xl border-2 border-slate-300 dark:border-gray-600 px-4 py-3 text-sm font-semibold text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-700 transition">İletişim</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ section -->
+<section class="py-16 bg-slate-100 dark:bg-gray-800/50">
+    <div class="max-w-3xl mx-auto px-4">
+        <div class="rounded-2xl border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800/80 p-8 shadow-sm animate-fade-in-up">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Sık sorulanlar</h3>
+            <p class="text-slate-600 dark:text-gray-400 leading-relaxed">
+                İlk kayıtta deneme süresi sunulabilir; iptal koşulları ve yıllık indirim oranları sözleşme metninde yer alır. Fiyatlar KDV dahil veya hariç olarak sözleşmede belirtilir. Kurumsal plan için özel teklif almak isterseniz <a href="{% url 'web:contact' %}" class="text-indigo-600 dark:text-indigo-400 font-medium hover:underline">iletişim</a> sayfasından talebinizi iletebilirsiniz.
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

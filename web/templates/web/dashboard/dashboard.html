@@ -1,0 +1,49 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Özet - RandevuPro{% endblock %}
+{% block page_title %}Özet{% endblock %}
+{% block content %}
+{% if not business %}
+<div class="rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-6">
+    <p class="font-medium">Henüz bir işletme tanımlı değil.</p>
+    <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Ayarlar sayfasından işletme bilgilerinizi ekleyebilirsiniz (kayıt sırasında oluşturulan işletme zaten mevcut olabilir).</p>
+</div>
+{% else %}
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
+        <p class="text-sm text-gray-500 dark:text-gray-400">Toplam randevu</p>
+        <p class="text-2xl font-semibold">{{ total_appointments }}</p>
+    </div>
+    <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
+        <p class="text-sm text-gray-500 dark:text-gray-400">Müşteri sayısı</p>
+        <p class="text-2xl font-semibold">{{ total_customers }}</p>
+    </div>
+</div>
+<h2 class="text-lg font-semibold mb-4">Yaklaşan randevular</h2>
+{% if upcoming %}
+<div class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead class="bg-gray-50 dark:bg-gray-800">
+            <tr>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">Tarih / Saat</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">Müşteri</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">Hizmet</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">Durum</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+            {% for apt in upcoming %}
+            <tr>
+                <td class="px-4 py-2 text-sm">{{ apt.start_at|date:"d.m.Y H:i" }}</td>
+                <td class="px-4 py-2 text-sm">{{ apt.customer.name }}</td>
+                <td class="px-4 py-2 text-sm">{{ apt.service.name }}</td>
+                <td class="px-4 py-2 text-sm">{{ apt.get_status_display }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="text-gray-500 dark:text-gray-400">Yaklaşan randevu yok.</p>
+{% endif %}
+{% endif %}
+{% endblock %}

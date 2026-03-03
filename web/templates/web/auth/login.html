@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Giriş - RandevuPro{% endblock %}
+{% block content %}
+<section class="py-12 sm:py-16 bg-slate-50 dark:bg-gray-900/50">
+    <div class="max-w-md mx-auto px-4">
+        <div class="rounded-2xl border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 shadow-lg animate-fade-in-up">
+            <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Giriş yap</h1>
+            <form method="post" class="space-y-5">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div>
+                        <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-1">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}<p class="text-red-600 text-sm mt-1">{{ field.errors.0 }}</p>{% endif %}
+                    </div>
+                {% endfor %}
+                <div class="flex items-center justify-between pt-2">
+                    <button type="submit" class="rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:bg-indigo-500 transition">Giriş</button>
+                    <a href="{% url 'web:forgot' %}" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">Şifremi unuttum</a>
+                </div>
+            </form>
+            <p class="mt-6 pt-6 border-t border-slate-200 dark:border-gray-700 text-sm text-slate-500 dark:text-gray-400">Hesabınız yok mu? <a href="{% url 'web:register' %}" class="text-indigo-600 dark:text-indigo-400 font-medium hover:underline">Kayıt olun</a>.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

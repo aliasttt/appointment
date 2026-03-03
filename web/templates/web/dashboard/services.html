@@ -1,0 +1,33 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Hizmetler - RandevuPro{% endblock %}
+{% block page_title %}Hizmetler{% endblock %}
+{% block content %}
+{% if services %}
+<div class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead class="bg-gray-50 dark:bg-gray-800">
+            <tr>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">Hizmet</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">Süre (dk)</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">Fiyat (₺)</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">Aktif</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+            {% for s in services %}
+            <tr>
+                <td class="px-4 py-2 text-sm font-medium">{{ s.name }}</td>
+                <td class="px-4 py-2 text-sm">{{ s.duration_min }}</td>
+                <td class="px-4 py-2 text-sm">{{ s.price_try }}</td>
+                <td class="px-4 py-2 text-sm">{% if s.active %}Evet{% else %}Hayır{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 text-center text-gray-500 dark:text-gray-400">
+    Henüz hizmet tanımlanmamış. Ayarlar veya seed_demo ile ekleyebilirsiniz. CRUD API üzerinden de yönetilebilir.
+</div>
+{% endif %}
+{% endblock %}

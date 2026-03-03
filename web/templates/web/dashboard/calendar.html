@@ -1,0 +1,37 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Takvim - RandevuPro{% endblock %}
+{% block page_title %}Takvim{% endblock %}
+{% block content %}
+<p class="text-gray-600 dark:text-gray-400 mb-4">Haftalık randevu görünümü (basit grid).</p>
+<div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 overflow-x-auto">
+    <table class="min-w-full text-sm">
+        <thead>
+            <tr class="border-b border-gray-200 dark:border-gray-700">
+                <th class="p-2 text-left w-24">Saat</th>
+                <th class="p-2 text-left">Pazartesi</th>
+                <th class="p-2 text-left">Salı</th>
+                <th class="p-2 text-left">Çarşamba</th>
+                <th class="p-2 text-left">Perşembe</th>
+                <th class="p-2 text-left">Cuma</th>
+                <th class="p-2 text-left">Cumartesi</th>
+                <th class="p-2 text-left">Pazar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for h in "1234567890" %}
+            <tr class="border-b border-gray-100 dark:border-gray-700">
+                <td class="p-2 text-gray-500 w-24">{{ forloop.counter0|add:9 }}:00</td>
+                <td class="p-2 min-w-[120px] h-12"></td>
+                <td class="p-2 min-w-[120px]"></td>
+                <td class="p-2 min-w-[120px]"></td>
+                <td class="p-2 min-w-[120px]"></td>
+                <td class="p-2 min-w-[120px]"></td>
+                <td class="p-2 min-w-[120px]"></td>
+                <td class="p-2 min-w-[120px]"></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<p class="mt-4 text-sm text-gray-500">Randevuları liste sayfasından yönetebilirsiniz. Takvim doldurma API ile entegre edilebilir.</p>
+{% endblock %}

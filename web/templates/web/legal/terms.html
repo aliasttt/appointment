@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Kullanım Koşulları - RandevuPro{% endblock %}
+{% block content %}
+<!-- Page header -->
+<section class="relative py-12 sm:py-16 overflow-hidden bg-gradient-to-br from-slate-100 to-indigo-50 dark:from-gray-900 dark:to-indigo-950/30">
+    <div class="absolute top-0 right-0 w-96 h-96 bg-indigo-200/30 dark:bg-indigo-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+    <div class="relative max-w-4xl mx-auto px-4 text-center">
+        <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-4 animate-fade-in-up">Kullanım Koşulları</h1>
+        <p class="text-slate-600 dark:text-gray-400 max-w-2xl mx-auto animate-fade-in-up animate-delay-100">
+            RandevuPro web sitesi ve yazılım hizmeti aşağıdaki koşullara tabidir. Hizmeti kullanarak bu koşulları kabul etmiş sayılırsınız.
+        </p>
+    </div>
+</section>
+
+<!-- Content sections -->
+<section class="py-12 bg-white dark:bg-gray-900/50">
+    <div class="max-w-4xl mx-auto px-4 space-y-8">
+        <div class="rounded-2xl border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800/80 p-6 sm:p-8 shadow-sm hover:shadow-md transition animate-fade-in-up">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 font-bold">1</span>
+                <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Hizmetin Tanımı ve Kapsamı</h2>
+            </div>
+            <p class="text-slate-600 dark:text-gray-400 leading-relaxed">
+                RandevuPro, kuaför salonları, güzellik merkezleri, klinikler ve benzeri işletmelerin randevu yönetimi ve müşteri ilişkileri ihtiyaçlarını karşılamak üzere sunulan bir yazılım hizmetidir. Hizmet kapsamında çevrimiçi randevu sayfaları, takvim yönetimi, müşteri ve hizmet kayıtları, raporlama ve (seçilen plana göre) API erişimi yer alabilir. Hizmetin kapsamı ve özellikleri zaman içinde güncellenebilir; önemli değişiklikler kullanıcılara önceden duyurulur.
+            </p>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 dark:border-gray-700 bg-slate-50/50 dark:bg-gray-800/50 p-6 sm:p-8 shadow-sm hover:shadow-md transition animate-fade-in-up">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 font-bold">2</span>
+                <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Hesap ve Kayıt Yükümlülükleri</h2>
+            </div>
+            <p class="text-slate-600 dark:text-gray-400 leading-relaxed">
+                Hizmetten yararlanmak için geçerli bir e-posta adresi ve güvenli bir şifre ile kayıt olmanız gerekir. Verdiğiniz bilgilerin doğru, güncel ve eksiksiz olması sizin sorumluluğunuzdadır. Hesabınızı başkalarıyla paylaşmamalı ve şifrenizi gizli tutmalısınız. Hesabınız üzerinden yapılan tüm işlemlerden siz sorumlusunuz. İşletme adı, randevu sayfası adresi (slug) ve müşterilere ait verileri yasalara ve bu koşullara uygun biçimde kullanmakla yükümlüsünüz.
+            </p>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800/80 p-6 sm:p-8 shadow-sm hover:shadow-md transition animate-fade-in-up">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400 font-bold">3</span>
+                <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Kullanım Kuralları ve Yasaklar</h2>
+            </div>
+            <p class="text-slate-600 dark:text-gray-400 leading-relaxed">
+                Hizmeti yalnızca yasalara, kamu düzenine ve genel ahlaka uygun şekilde kullanabilirsiniz. Hizmeti başkalarının haklarını ihlal etmek, yanıltıcı veya spam içerik yaymak, zararlı yazılım yaymak veya sistemin güvenliğini tehlikeye atmak amacıyla kullanmak yasaktır. Randevu ve müşteri verilerini üçüncü taraflarla hukuka aykırı biçimde paylaşmak, veri sızıntısına neden olmak veya KVKK ve ilgili mevzuata aykırı işlem yapmak kabul edilemez. İhlal tespitinde hesabınız askıya alınabilir veya sonlandırılabilir.
+            </p>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 dark:border-gray-700 bg-slate-50/50 dark:bg-gray-800/50 p-6 sm:p-8 shadow-sm hover:shadow-md transition animate-fade-in-up">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 font-bold">4</span>
+                <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Fikri Mülkiyet</h2>
+            </div>
+            <p class="text-slate-600 dark:text-gray-400 leading-relaxed">
+                RandevuPro markası, logosu, arayüzü ve yazılımı RandevuPro'a aittir. Hizmeti kullanmak size bu varlıklar üzerinde mülkiyet veya telif hakkı devri sağlamaz. İzinsiz kopyalama, dağıtma veya türev çalışma yasaktır. Sizin girdiğiniz metin, logo ve müşteri verileri üzerindeki haklar size aittir; RandevuPro, hizmeti sunmak için gerekli ölçüde bu verileri işleme hakkına sahiptir.
+            </p>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800/80 p-6 sm:p-8 shadow-sm hover:shadow-md transition animate-fade-in-up">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 font-bold">5</span>
+                <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Ödeme ve İptal</h2>
+            </div>
+            <p class="text-slate-600 dark:text-gray-400 leading-relaxed">
+                Ücretli planlar için seçilen dönem (aylık/yıllık) sonunda otomatik yenileme uygulanabilir; ödeme altyapısı devreye alındığında detaylar sözleşme ve fiyat sayfasında belirtilir. İptal talebinizi belirlenen süre içinde ilettiğinizde bir sonraki dönemden itibaren yenileme yapılmaz. İade koşulları ayrıca duyurulacaktır.
+            </p>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 dark:border-gray-700 bg-slate-50/50 dark:bg-gray-800/50 p-6 sm:p-8 shadow-sm hover:shadow-md transition animate-fade-in-up">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 font-bold">6</span>
+                <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Sorumluluk Sınırı</h2>
+            </div>
+            <p class="text-slate-600 dark:text-gray-400 leading-relaxed">
+                Hizmet "olduğu gibi" sunulmaktadır. RandevuPro, hizmetin kesintisiz veya hatasız olacağına dair garanti vermez. Dolaylı zarar, iş kaybı veya veri kaybından doğan taleplerde yasalarla sınırlı sorumluluk çerçevesi uygulanır. Verilerinizi düzenli yedeklemeniz önerilir.
+            </p>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800/80 p-6 sm:p-8 shadow-sm hover:shadow-md transition animate-fade-in-up">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 font-bold">7</span>
+                <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Uygulanacak Hukuk ve Uyuşmazlık</h2>
+            </div>
+            <p class="text-slate-600 dark:text-gray-400 leading-relaxed">
+                Bu koşullar Türkiye Cumhuriyeti kanunlarına tabidir. Uyuşmazlıklarda Türkiye mahkemeleri ve icra daireleri yetkilidir.
+            </p>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 dark:border-gray-700 bg-slate-50/50 dark:bg-gray-800/50 p-6 sm:p-8 shadow-sm hover:shadow-md transition animate-fade-in-up">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 font-bold">8</span>
+                <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Değişiklikler</h2>
+            </div>
+            <p class="text-slate-600 dark:text-gray-400 leading-relaxed">
+                RandevuPro, bu kullanım koşullarını önceden bildirerek değiştirme hakkını saklı tutar. Değişiklikler sitede yayınlandığında yürürlüğe girer. Kullanıma devam etmeniz güncel koşulları kabul ettiğiniz anlamına gelir.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Bottom CTA -->
+<section class="py-10 bg-slate-100 dark:bg-gray-800/50">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+        <p class="text-sm text-slate-500 dark:text-gray-400 mb-4">Son güncelleme: 2026</p>
+        <p class="text-slate-600 dark:text-gray-400">
+            <a href="{% url 'web:contact' %}" class="text-indigo-600 dark:text-indigo-400 font-medium hover:underline">İletişim</a> ·
+            <a href="{% url 'web:home' %}" class="text-indigo-600 dark:text-indigo-400 font-medium hover:underline">Ana sayfaya dön</a>
+        </p>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr" class="h-full" x-data="{ dark: localStorage.getItem('theme') === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches }" x-init="$watch('dark', value => { localStorage.setItem('theme', value ? 'dark' : 'light'); document.documentElement.classList.toggle('dark', value); })" :class="{ 'dark': dark }">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Panel - RandevuPro{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { darkMode: 'class' }
+    </script>
+    <style>
+      .input { display: block; width: 100%; border-radius: 0.375rem; border: 1px solid #d1d5db; background: #fff; padding: 0.5rem 0.75rem; color: #111; }
+      .dark .input { border-color: #4b5563; background: #1f2937; color: #f3f4f6; }
+    </style>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.0"></script>
+</head>
+<body class="h-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+<div class="min-h-screen flex">
+    <aside class="w-56 flex-shrink-0 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex flex-col">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-800">
+            <a href="{% url 'web:dashboard' %}" class="font-semibold text-lg"><span class="text-indigo-600 dark:text-indigo-400">Randevu</span>Pro</a>
+        </div>
+        <nav class="flex-1 p-2 space-y-0.5">
+            <a href="{% url 'web:dashboard' %}" class="flex items-center gap-2 rounded-md px-3 py-2 text-sm {% if request.resolver_match.url_name == 'dashboard' %}bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300{% else %}text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800{% endif %}">Özet</a>
+            <a href="{% url 'web:app_calendar' %}" class="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">Takvim</a>
+            <a href="{% url 'web:app_appointments' %}" class="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">Randevular</a>
+            <a href="{% url 'web:app_customers' %}" class="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">Müşteriler</a>
+            <a href="{% url 'web:app_services' %}" class="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">Hizmetler</a>
+            <a href="{% url 'web:app_staff' %}" class="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">Personel</a>
+            <a href="{% url 'web:app_settings' %}" class="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">Ayarlar</a>
+            <a href="{% url 'web:app_billing' %}" class="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">Faturalandırma</a>
+            <a href="{% url 'web:app_notifications' %}" class="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">Bildirimler</a>
+            <a href="{% url 'web:app_help' %}" class="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">Yardım</a>
+        </nav>
+        <div class="p-2 border-t border-gray-200 dark:border-gray-800">
+            <a href="{% url 'web:home' %}" class="block rounded-md px-3 py-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">Siteye dön</a>
+            <a href="{% url 'web:logout' %}" class="block rounded-md px-3 py-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">Çıkış</a>
+        </div>
+    </aside>
+    <div class="flex-1 flex flex-col min-w-0">
+        <header class="flex-shrink-0 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 py-3 flex items-center justify-between">
+            <h1 class="text-lg font-semibold">{% block page_title %}Panel{% endblock %}</h1>
+            <div class="flex items-center gap-2">
+                <button type="button" class="rounded-full border border-gray-200 dark:border-gray-700 p-1" @click="dark = !dark" :aria-label="dark ? 'Açık mod' : 'Koyu mod'">
+                    <span x-show="!dark">🌙</span>
+                    <span x-show="dark">☀️</span>
+                </button>
+                <span class="text-sm text-gray-500 dark:text-gray-400">{{ request.user.email }}</span>
+            </div>
+        </header>
+        <main class="flex-1 p-4 overflow-auto">
+            {% if messages %}
+                <div class="mb-4 space-y-2" x-data="{ show: true }" x-show="show" x-transition>
+                    {% for message in messages %}
+                        <div class="rounded-md border px-4 py-2 text-sm {% if message.tags == 'success' %}border-emerald-300 bg-emerald-50 text-emerald-900 dark:border-emerald-700 dark:bg-emerald-900/40{% elif message.tags == 'error' %}border-red-300 bg-red-50 text-red-900 dark:border-red-700 dark:bg-red-900/40{% else %}border-gray-200 dark:border-gray-700{% endif %}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</div>
+</body>
+</html>

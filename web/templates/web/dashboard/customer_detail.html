@@ -1,0 +1,48 @@
+{% extends "dashboard_base.html" %}
+{% block title %}{{ customer.name }} - RandevuPro{% endblock %}
+{% block page_title %}Müşteri: {{ customer.name }}{% endblock %}
+{% block content %}
+<div class="max-w-3xl space-y-6">
+    <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
+        <h2 class="text-lg font-semibold mb-4">Bilgiler</h2>
+        <dl class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+            <dt class="text-gray-500 dark:text-gray-400">Ad soyad</dt>
+            <dd>{{ customer.name }}</dd>
+            <dt class="text-gray-500 dark:text-gray-400">Telefon</dt>
+            <dd>{{ customer.phone }}</dd>
+            <dt class="text-gray-500 dark:text-gray-400">Notlar</dt>
+            <dd>{{ customer.notes|default:"—" }}</dd>
+        </dl>
+    </div>
+    <div>
+        <h2 class="text-lg font-semibold mb-4">Randevu geçmişi</h2>
+        {% if visits %}
+        <div class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-800">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">Tarih</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">Hizmet</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">Personel</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">Durum</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                    {% for apt in visits %}
+                    <tr>
+                        <td class="px-4 py-2 text-sm">{{ apt.start_at|date:"d.m.Y H:i" }}</td>
+                        <td class="px-4 py-2 text-sm">{{ apt.service.name }}</td>
+                        <td class="px-4 py-2 text-sm">{% if apt.staff %}{{ apt.staff.name }}{% else %}—{% endif %}</td>
+                        <td class="px-4 py-2 text-sm">{{ apt.get_status_display }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-gray-500 dark:text-gray-400">Randevu kaydı yok.</p>
+        {% endif %}
+    </div>
+    <p><a href="{% url 'web:app_customers' %}" class="text-indigo-600 dark:text-indigo-400 text-sm">← Müşteri listesine dön</a></p>
+</div>
+{% endblock %}
