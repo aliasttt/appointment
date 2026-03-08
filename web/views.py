@@ -42,7 +42,10 @@ def auth_login(request):
         return redirect("web:dashboard")
     form = LoginForm(request=request, data=request.POST or None)
     if request.method == "POST" and form.is_valid():
-        login(request, form.cleaned_data["user"])
+        user = form.cleaned_data["user"]
+        login(request, user)
+        if user.is_superuser:
+            return redirect("/admin/")
         next_url = request.GET.get("next") or reverse("web:dashboard")
         return redirect(next_url)
     return render(request, "web/auth/login.html", {"form": form})
@@ -159,8 +162,10 @@ def contact(request):
 # ----- Dashboard (login required, business context) -----
 
 def _require_business(view_func):
-    """Decorator: redirect to dashboard if no business (e.g. owner with no business)."""
+    """Decorator: redirect to dashboard if no business; superuser has no panel, send to admin."""
     def wrapper(request, *args, **kwargs):
+        if request.user.is_superuser:
+            return redirect("/admin/")
         business = get_current_business(request)
         if not business:
             messages.warning(request, "Henüz bir işletme tanımlı değil.")
@@ -185,6 +190,8 @@ def _require_active_subscription(view_func):
 
 @login_required
 def dashboard(request):
+    if request.user.is_superuser:
+        return redirect("/admin/")
     business = get_current_business(request)
     if not business:
         return render(request, "web/dashboard/dashboard.html", {"business": None})
