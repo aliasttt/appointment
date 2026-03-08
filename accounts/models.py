@@ -43,6 +43,12 @@ class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = None
     email = models.EmailField("E-posta", unique=True)
+    # Override inherited field labels so admin shows clear Turkish text (not "Görev durumu")
+    is_staff = models.BooleanField(
+        default=False,
+        verbose_name="Admin panele giriş",
+        help_text="Bu kullanıcının /admin/ sitesine oturum açıp açamayacağını belirler. Yalnızca süper admin için işaretli olmalı.",
+    )
     phone = models.CharField(
         "Telefon",
         max_length=20,
