@@ -14,7 +14,7 @@ from core.models import Business
 from crm.models import Customer
 from scheduling.models import Appointment
 from staff.models import StaffProfile
-from web.utils import get_current_business
+from web.utils import get_current_business, get_available_times, get_next_booking_dates
 
 
 # ----- Public -----
@@ -87,7 +87,54 @@ def public_booking(request, business_slug):
     business = get_object_or_404(Business, slug=business_slug)
     services = business.services.filter(active=True)
     staff_list = business.staff.all()
-    return render(request, "web/booking.html", {"business": business, "services": services, "staff_list": staff_list})
+    dates = get_next_booking_dates(14)
+    return render(request, "web/booking.html", {
+        "business": business,
+        "services": services,
+        "staff_list": staff_list,
+        "dates": dates,
+    })
+
+
+def public_booking_slots(request, business_slug):
+    """HTMX: return HTML fragment of time slot buttons for a given date."""
+    business = get_object_or_404(Business, slug=business_slug)
+    date_str = request.GET.get("date")
+    if not date_str:
+        return render(request, "web/booking_slots_fragment.html", {"slots": []})
+    from datetime import datetime
+    try:
+        day = datetime.strptime(date_str, "%Y-%m-%d").date()
+    except ValueError:
+        return render(request, "web/booking_slots_fragment.html", {"slots": []})
+    slots = get_available_times(business, day)
+    return render(request, "web/booking_slots_fragment.html", {"slots": slots, "date": date_str})
+
+
+@require_http_methods(["POST"])
+def public_booking_submit(request, business_slug):
+    """Handle public booking form submit; no login required."""
+    business = get_object_or_404(Business, slug=business_slug)
+    from api.serializers import PublicBookSerializer
+    payload = {
+        "business_slug": business_slug,
+        "service_id": request.POST.get("service_id"),
+        "staff_id": request.POST.get("staff_id") or None,
+        "date": request.POST.get("date"),
+        "time": request.POST.get("time"),
+        "customer_name": request.POST.get("customer_name", "").strip(),
+        "customer_phone": request.POST.get("customer_phone", "").strip(),
+        "notes": request.POST.get("notes", "").strip() or "",
+    }
+    ser = PublicBookSerializer(data=payload)
+    if not ser.is_valid():
+        for field, err in ser.errors.items():
+            msg = err[0] if isinstance(err, list) else str(err)
+            messages.error(request, msg)
+        return redirect("web:booking", business_slug=business_slug)
+    ser.save()
+    messages.success(request, "Randevunuz alındı. İşletme sizinle iletişime geçebilir.")
+    return redirect("web:booking", business_slug=business_slug)
 
 
 def legal_terms(request):
