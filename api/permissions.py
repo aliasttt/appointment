@@ -3,12 +3,25 @@
 from rest_framework import permissions
 
 from accounts.models import User
-from web.utils import get_current_business
+from web.utils import can_access_app, get_current_business
 
 
 def get_business_from_request(request):
     """Return business for API request (user must be authenticated)."""
     return get_current_business(request)
+
+
+class HasActiveSubscription(permissions.BasePermission):
+    """
+    Allow API access only if business has active access: in 7-day trial or payment_status is PAID.
+    Use on all app CRUD views; leave Login, Register, PublicBook without it.
+    """
+
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated:
+            return False
+        business = get_current_business(request)
+        return can_access_app(business)
 
 
 class IsOwnerOrStaff(permissions.BasePermission):

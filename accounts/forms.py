@@ -58,6 +58,17 @@ class RegisterForm(forms.Form):
         max_length=64,
         widget=forms.TextInput(attrs={"class": "input", "placeholder": "salon-adi"}),
     )
+    phone = forms.CharField(
+        label="Telefon",
+        max_length=20,
+        required=True,
+        widget=forms.TextInput(attrs={"class": "input", "placeholder": "+90 5XX XXX XX XX"}),
+    )
+    address = forms.CharField(
+        label="Adres",
+        required=True,
+        widget=forms.Textarea(attrs={"class": "input", "rows": 3, "placeholder": "İşletme adresi"}),
+    )
 
     def clean_email(self):
         email = self.cleaned_data.get("email")

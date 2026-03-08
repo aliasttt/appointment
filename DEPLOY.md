@@ -74,21 +74,154 @@ heryerrandevu2233#
 
 ## ادمین جنگو بدون استایل (صفحه ورود سوپریوزر خراب)
 
-پروژه از **WhiteNoise** استفاده می‌کند تا فایل‌های استاتیک (CSS/آیکن ادمین) را خود اپ سرو کند. بعد از دیپلوی، حتماً این کارها را انجام دهید:
+اگر بعد از دیپلوی و نصب WhiteNoise هنوز صفحه ورود ادمین بدون CSS و با مربع‌های سیاه است، **معمولاً nginx درخواست‌های `/static/` را به اپ نمی‌فرستد یا از مسیر اشتباه سرو می‌کند.** راه‌حل قطعی این است که **خود nginx** فایل‌های استاتیک را سرو کند.
 
-1. **روی سرور** بعد از `git pull` و اجرای اسکریپت دیپلوی، وابستگی جدید نصب می‌شود (`whitenoise` در `requirements.txt`).
-2. حتماً **`collectstatic`** در اسکریپت اجرا شود تا فایل‌های ادمین در `staticfiles` کپی شوند.
-3. بعد از `systemctl restart appointment` درخواست‌های `/static/` را خود Django (با WhiteNoise) جواب می‌دهد و صفحه ورود ادمین با ظاهر پیش‌فرض لود می‌شود.
+### مرحلهٔ ۱: ویرایش کانفیگ nginx روی سرور
 
-اگر باز هم استایل نیامد، در nginx بلوک `server` مربوط به این دامنه، **قبل از** `location /` این را اضافه کنید (تا nginx خودش فایل استاتیک سرو کند):
+1. فایل کانفیگ همین سایت را باز کنید، مثلاً:
+   ```bash
+   sudo nano /etc/nginx/sites-available/heryerrandevu.com.tr
+   ```
+   (یا هر نامی که برای این دامنه دارید؛ ممکن است در `sites-available/default` باشد.)
+
+2. داخل بلوک `server { ... }` مربوط به `heryerrandevu.com.tr`، **قبل از** بلوک `location / { ... }` این بلوک را اضافه کنید (اگر از قبل دارید، فقط مسیر `alias` را چک کنید):
+
+   ```nginx
+   location /static/ {
+       alias /srv/appointment/staticfiles/;
+   }
+   ```
+
+3. ذخیره و خروج. سپس تست و ریلود:
+   ```bash
+   sudo nginx -t
+   sudo systemctl reload nginx
+   ```
+
+4. در مرورگر صفحه ادمین را با رفرش سخت (Ctrl+F5) یا در حالت ناشناس باز کنید.
+
+### مرحلهٔ ۲ (اختیاری): تست از روی خود سرور
+
+اگر باز هم کار نکرد، روی سرور اجرا کنید تا ببینید آیا فایل استاتیک از روی دیسک خوانده می‌شود:
+
+```bash
+ls -la /srv/appointment/staticfiles/admin/css/ | head -5
+curl -I https://heryerrandevu.com.tr/static/admin/css/base.css
+```
+
+خروجی `curl` باید `HTTP/2 200` و `content-type: text/css` باشد. اگر ۴۰۴ است، یا بلوک `location /static/` را اضافه نکرده‌اید یا مسیر `alias` اشتباه است (باید دقیقاً `/srv/appointment/staticfiles/` با اسلش آخر باشد).
+
+### رفع 404 برای `/static/admin/css/base.css`
+
+اگر روی سرور این دستور ۴۰۴ می‌دهد:
+
+```bash
+curl -I https://heryerrandevu.com.tr/static/admin/css/base.css
+```
+
+دو حالت داریم:
+
+**الف) مطمئن شوید فایل روی دیسک هست:**
+
+```bash
+ls -la /srv/appointment/staticfiles/admin/css/base.css
+```
+
+اگر «No such file» بود، دوباره collectstatic بزنید و بعد nginx را چک کنید:
+
+```bash
+cd /srv/appointment && source venv/bin/activate && source /etc/appointment.env && python manage.py collectstatic --noinput
+```
+
+**ب) بلوک `location /static/` باید داخل همان `server`ی باشد که `listen 443` دارد.**
+
+فایل کانفیگ را باز کنید (معمولاً همانی که برای این دامنه استفاده می‌کنید):
+
+```bash
+sudo nano /etc/nginx/sites-available/default
+```
+
+در فایل، بلوک `server {`ی را پیدا کنید که داخلش **`listen 443`** هست (نه فقط `listen 80`). داخل **همان** بلوک، حتماً **قبل از** `location / {` این را بگذارید (اگر از قبل هست، فقط مسیر را چک کنید):
 
 ```nginx
-location /static/ {
-    alias /srv/appointment/staticfiles/;
+    location /static/ {
+        alias /srv/appointment/staticfiles/;
+    }
+```
+
+- بعد از `alias` حتماً اسلش آخر باشد: `.../staticfiles/`
+- مسیر دقیقاً: `/srv/appointment/staticfiles/`
+
+ذخیره کنید، سپس:
+
+```bash
+sudo nginx -t && sudo systemctl reload nginx
+curl -I https://heryerrandevu.com.tr/static/admin/css/base.css
+```
+
+باید در خط اول `HTTP/2 200` بیاید.
+
+### اگر هنوز درست نشد: بلوک درست را ویرایش کنید
+
+سایت با **HTTPS** باز می‌شود؛ پس nginx معمولاً دو بلوک `server` دارد: یکی `listen 80` و یکی `listen 443 ssl`. باید `location /static/` را داخل **همان بلوکی** بگذارید که `listen 443` و `server_name heryerrandevu.com.tr` دارد.
+
+روی سرور این را اجرا کنید تا ببینید کدام فایل/بلوک این دامنه را سرو می‌کند:
+
+```bash
+grep -r "heryerrandevu\|443\|server_name" /etc/nginx/sites-enabled/
+```
+
+سپس آن فایل را باز کنید و داخل بلوک `server {` که `listen 443` دارد، دقیقاً قبل از `location / {` این را اضافه کنید:
+
+```nginx
+    location /static/ {
+        alias /srv/appointment/staticfiles/;
+    }
+```
+
+**مثال** — اگر فایل شما شبیه این است:
+
+```nginx
+server {
+    listen 443 ssl;
+    server_name heryerrandevu.com.tr;
+    # ... ssl_certificate و بقیه ...
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        ...
+    }
 }
 ```
 
-سپس `sudo nginx -t` و `sudo systemctl reload nginx`. نمونهٔ کامل در `deploy/nginx-appointment.conf.example` است.
+باید شود:
+
+```nginx
+server {
+    listen 443 ssl;
+    server_name heryerrandevu.com.tr;
+    # ... ssl و بقیه ...
+
+    location /static/ {
+        alias /srv/appointment/staticfiles/;
+    }
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        ...
+    }
+}
+```
+
+ذخیره، سپس `sudo nginx -t && sudo systemctl reload nginx`. بعد دوباره تست:
+
+```bash
+curl -I https://heryerrandevu.com.tr/static/admin/css/base.css
+```
+
+باید در خط اول `HTTP/2 200` بیاید.
+
+نمونهٔ کامل بلوک‌های nginx در `deploy/nginx-appointment.conf.example` است.
 
 ## نکات
 

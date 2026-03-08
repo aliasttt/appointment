@@ -14,7 +14,10 @@ from core.models import Business
 from crm.models import Customer
 from scheduling.models import Appointment
 from staff.models import StaffProfile
-from web.utils import get_current_business, get_available_times, get_next_booking_dates
+from django.utils import timezone
+from datetime import timedelta
+
+from web.utils import get_current_business, get_available_times, get_next_booking_dates, can_access_app
 
 
 # ----- Public -----
@@ -61,13 +64,17 @@ def auth_register(request):
             password=form.cleaned_data["password"],
             role=User.Role.OWNER,
         )
+        trial_ends = timezone.now() + timedelta(days=7)
         business = Business.objects.create(
             owner=user,
             name=form.cleaned_data["business_name"],
             slug=form.cleaned_data["business_slug"],
+            phone=form.cleaned_data.get("phone", ""),
+            address=form.cleaned_data.get("address", ""),
+            trial_ends_at=trial_ends,
         )
         login(request, user)
-        messages.success(request, "Hesabınız oluşturuldu. İşletmenizi ayarlardan düzenleyebilirsiniz.")
+        messages.success(request, "Hesabınız oluşturuldu. 7 gün ücretsiz deneme süreniz başladı.")
         return redirect("web:dashboard")
     return render(request, "web/auth/register.html", {"form": form})
 
@@ -162,12 +169,31 @@ def _require_business(view_func):
     return wrapper
 
 
+def _require_active_subscription(view_func):
+    """Decorator: redirect to billing if trial ended and payment not PAID (access only after trial or paid)."""
+    def wrapper(request, *args, **kwargs):
+        business = get_current_business(request)
+        if business and not can_access_app(business):
+            messages.warning(
+                request,
+                "Deneme süreniz bitti. Devam etmek için ödemenizi yapıp yönetici onayı bekleyin (WhatsApp ile iletişime geçin).",
+            )
+            return redirect("web:billing")
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+
 @login_required
 def dashboard(request):
     business = get_current_business(request)
     if not business:
         return render(request, "web/dashboard/dashboard.html", {"business": None})
-    from django.utils import timezone
+    if not can_access_app(business):
+        messages.warning(
+            request,
+            "Deneme süreniz bitti. Devam etmek için ödemenizi yapıp yönetici onayı bekleyin (WhatsApp ile iletişime geçin).",
+        )
+        return redirect("web:billing")
     now = timezone.now()
     upcoming = business.appointments.filter(start_at__gte=now).exclude(status=Appointment.Status.CANCELED).order_by("start_at")[:10]
     total_appointments = business.appointments.count()
@@ -182,6 +208,7 @@ def dashboard(request):
 
 @login_required
 @_require_business
+@_require_active_subscription
 def app_calendar(request):
     business = get_current_business(request)
     return render(request, "web/dashboard/calendar.html", {"business": business})
@@ -189,6 +216,7 @@ def app_calendar(request):
 
 @login_required
 @_require_business
+@_require_active_subscription
 def app_appointments(request):
     business = get_current_business(request)
     appointments = business.appointments.select_related("customer", "service", "staff").order_by("-start_at")[:100]
@@ -197,6 +225,7 @@ def app_appointments(request):
 
 @login_required
 @_require_business
+@_require_active_subscription
 def app_customers(request):
     business = get_current_business(request)
     customers = business.customers.order_by("-created_at")[:100]
@@ -205,6 +234,7 @@ def app_customers(request):
 
 @login_required
 @_require_business
+@_require_active_subscription
 def app_customer_detail(request, uuid):
     business = get_current_business(request)
     customer = get_object_or_404(Customer, business=business, id=uuid)
@@ -214,6 +244,7 @@ def app_customer_detail(request, uuid):
 
 @login_required
 @_require_business
+@_require_active_subscription
 def app_services(request):
     business = get_current_business(request)
     services = business.services.all()
@@ -222,6 +253,7 @@ def app_services(request):
 
 @login_required
 @_require_business
+@_require_active_subscription
 def app_staff(request):
     business = get_current_business(request)
     staff_list = business.staff.select_related("user").all()
@@ -230,6 +262,7 @@ def app_staff(request):
 
 @login_required
 @_require_business
+@_require_active_subscription
 def app_settings(request):
     business = get_current_business(request)
     return render(request, "web/dashboard/settings.html", {"business": business})
@@ -244,6 +277,7 @@ def app_billing(request):
 
 @login_required
 @_require_business
+@_require_active_subscription
 def app_notifications(request):
     business = get_current_business(request)
     return render(request, "web/dashboard/notifications.html", {"business": business})
@@ -251,6 +285,7 @@ def app_notifications(request):
 
 @login_required
 @_require_business
+@_require_active_subscription
 def app_help(request):
     business = get_current_business(request)
     return render(request, "web/dashboard/help.html", {"business": business})

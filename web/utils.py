@@ -9,6 +9,19 @@ from core.models import Business
 from scheduling.models import Appointment
 
 
+def can_access_app(business):
+    """
+    True if user can use app/web: either still in 7-day trial or payment_status is PAID.
+    """
+    if not business:
+        return False
+    if business.payment_status == Business.PaymentStatus.PAID:
+        return True
+    if business.trial_ends_at and timezone.now() < business.trial_ends_at:
+        return True
+    return False
+
+
 def get_current_business(request):
     """
     Return the business for the current user (owner's first business or staff's business).

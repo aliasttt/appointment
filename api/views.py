@@ -1,5 +1,8 @@
 """API v1 views: JWT auth + CRUD viewsets + public book."""
 
+from datetime import timedelta
+
+from django.utils import timezone
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -9,7 +12,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from accounts.models import User
-from api.permissions import BusinessScopedPermission, IsOwnerOrStaff
+from api.permissions import BusinessScopedPermission, HasActiveSubscription, IsOwnerOrStaff
 from api.serializers import (
     AppointmentSerializer,
     BusinessSerializer,
@@ -58,6 +61,8 @@ class RegisterView(APIView):
         password = request.data.get("password")
         business_name = request.data.get("business_name")
         business_slug = request.data.get("business_slug")
+        phone = request.data.get("phone", "")
+        address = request.data.get("address", "")
         if not all([email, password, business_name, business_slug]):
             return Response(
                 {"detail": "email, password, business_name, business_slug gerekli."},
@@ -68,7 +73,15 @@ class RegisterView(APIView):
         if Business.objects.filter(slug=business_slug).exists():
             return Response({"detail": "Bu slug zaten kullanılıyor."}, status=status.HTTP_400_BAD_REQUEST)
         user = User.objects.create_user(email=email, password=password, role=User.Role.OWNER)
-        business = Business.objects.create(owner=user, name=business_name, slug=business_slug)
+        trial_ends = timezone.now() + timedelta(days=7)
+        business = Business.objects.create(
+            owner=user,
+            name=business_name,
+            slug=business_slug,
+            phone=phone,
+            address=address,
+            trial_ends_at=trial_ends,
+        )
         refresh = RefreshToken.for_user(user)
         return Response({
             "access": str(refresh.access_token),
@@ -90,7 +103,7 @@ class LogoutView(APIView):
 
 class BusinessViewSet(viewsets.ModelViewSet):
     serializer_class = BusinessSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrStaff]
+    permission_classes = [IsAuthenticated, IsOwnerOrStaff, HasActiveSubscription]
 
     def get_queryset(self):
         business = get_current_business(self.request)
@@ -108,7 +121,7 @@ class BusinessViewSet(viewsets.ModelViewSet):
 
 class ServiceViewSet(viewsets.ModelViewSet):
     serializer_class = ServiceSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrStaff, BusinessScopedPermission]
+    permission_classes = [IsAuthenticated, IsOwnerOrStaff, HasActiveSubscription, BusinessScopedPermission]
 
     def get_queryset(self):
         business = get_current_business(self.request)
@@ -126,7 +139,7 @@ class ServiceViewSet(viewsets.ModelViewSet):
 
 class StaffProfileViewSet(viewsets.ModelViewSet):
     serializer_class = StaffProfileSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrStaff, BusinessScopedPermission]
+    permission_classes = [IsAuthenticated, IsOwnerOrStaff, HasActiveSubscription, BusinessScopedPermission]
 
     def get_queryset(self):
         business = get_current_business(self.request)
@@ -144,7 +157,7 @@ class StaffProfileViewSet(viewsets.ModelViewSet):
 
 class CustomerViewSet(viewsets.ModelViewSet):
     serializer_class = CustomerSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrStaff, BusinessScopedPermission]
+    permission_classes = [IsAuthenticated, IsOwnerOrStaff, HasActiveSubscription, BusinessScopedPermission]
 
     def get_queryset(self):
         business = get_current_business(self.request)
@@ -162,7 +175,7 @@ class CustomerViewSet(viewsets.ModelViewSet):
 
 class AppointmentViewSet(viewsets.ModelViewSet):
     serializer_class = AppointmentSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrStaff, BusinessScopedPermission]
+    permission_classes = [IsAuthenticated, IsOwnerOrStaff, HasActiveSubscription, BusinessScopedPermission]
 
     def get_queryset(self):
         business = get_current_business(self.request)

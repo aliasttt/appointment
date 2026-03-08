@@ -5,11 +5,33 @@
 <div class="max-w-2xl space-y-6">
     <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
         <h2 class="text-lg font-semibold mb-4">Mevcut plan</h2>
-        <p class="text-gray-600 dark:text-gray-400">Başlangıç planı — Ödeme entegrasyonu henüz eklenmedi.</p>
+        <ul class="text-gray-600 dark:text-gray-400 space-y-2">
+            <li><strong>7 gün ücretsiz deneme</strong> — Kayıt olduktan sonra 7 gün tam erişim.</li>
+            <li><strong>Sonrası:</strong> Aylık <strong>500 TL</strong> tek plan. Ödemenizi yaptıktan sonra yönetici onayı ile erişim açılır.</li>
+        </ul>
+        {% if business.trial_ends_at %}
+        <p class="mt-3 text-sm text-gray-500 dark:text-gray-400">
+            Deneme bitiş: {{ business.trial_ends_at|date:"d.m.Y H:i" }}
+            {% if business.payment_status == "PENDING" %}
+            — Ödeme durumu: <span class="font-medium text-amber-600 dark:text-amber-400">Beklemede</span>
+            {% elif business.payment_status == "PAID" %}
+            — Ödeme durumu: <span class="font-medium text-green-600 dark:text-green-400">Ödendi</span>
+            {% endif %}
+        </p>
+        {% endif %}
+    </div>
+    <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
+        <h2 class="text-lg font-semibold mb-4">Ödeme nasıl yapılır?</h2>
+        <p class="text-gray-600 dark:text-gray-400 mb-4">
+            Ödemenizi <strong>WhatsApp</strong> üzerinden yapıp bize ulaşın. Ödeme onaylandıktan sonra yönetici hesabınızı "Ödendi" olarak güncelleyecek ve uygulama ile web erişiminiz açılacaktır.
+        </p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+            Deneme süresi bittikten sonra erişim, ödemeniz onaylanana kadar askıya alınır. Ödeme yapıp WhatsApp ile iletişime geçin.
+        </p>
     </div>
     <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
         <h2 class="text-lg font-semibold mb-4">Faturalar</h2>
-        <p class="text-gray-500 dark:text-gray-400 text-sm">Fatura listesi placeholder. Ödeme sistemi entegre edildiğinde burada görünecek.</p>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">Fatura listesi ödeme sistemi entegre edildiğinde burada görünecek.</p>
     </div>
 </div>
 {% endblock %}

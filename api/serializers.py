@@ -25,12 +25,14 @@ class BusinessSerializer(serializers.ModelSerializer):
             "slug",
             "phone",
             "address",
+            "payment_status",
+            "trial_ends_at",
             "working_hours",
             "booking_settings",
             "created_at",
             "updated_at",
         )
-        read_only_fields = ("id", "slug", "created_at", "updated_at")
+        read_only_fields = ("id", "slug", "payment_status", "trial_ends_at", "created_at", "updated_at")
 
 
 class ServiceSerializer(serializers.ModelSerializer):
