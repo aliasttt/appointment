@@ -7,6 +7,7 @@ app_name = "web"
 urlpatterns = [
     path("", views.home, name="home"),
     path("pricing/", views.pricing, name="pricing"),
+    path("companies/", views.business_list, name="business_list"),
     path("auth/login/", views.auth_login, name="login"),
     path("auth/logout/", views.auth_logout, name="logout"),
     path("auth/register/", views.auth_register, name="register"),

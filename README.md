@@ -9,6 +9,13 @@ Salon ve klinikler için randevu + CRM MVP (Türkiye pazarı). Django web uygula
 - **API (DRF):** JWT auth, CRUD (business, services, staff, customers, appointments), herkese açık randevu: `POST /api/v1/public/book/`
 - **Roller:** OWNER (işletme sahibi), STAFF (personel). Müşteri girişi MVP’de yok.
 
+### İş akışı (Web ↔ Uygulama)
+
+- **Ana panel:** İşletme sahibi paneli **uygulama (mobil) içinde** kullanır: müsait gün/saatleri oradan belirler, gelen randevuları görür, bildirim alır.
+- **Web sayfası:** Her işletmeye bir **genel randevu linki** verilir (örn. `/b/demo-salon/`). Müşteri bu sayfada müsait gün/saat seçer, bilgi formunu doldurup gönderir.
+- **Veri akışı:** Web'den gelen randevu isteği API ile kaydedilir; veriler **web'den uygulamaya** gelir, işletme sahibi uygulamada görür ve gerekirse bildirim alır.
+- **Web'de panel linki:** Sitede (örn. header'da) bir "Panel" linki bulunması sorun değildir; asıl yönetim paneli uygulama tarafındadır.
+
 ## Gereksinimler
 
 - Python 3.12+
@@ -79,6 +86,8 @@ python manage.py runserver
 |-------|------------------------|-------------|
 | Owner | owner@randevupro.com   | Demo12345!  |
 | Staff | staff@randevupro.com   | Demo12345!  |
+
+- **İşletmeler listesi:** `/companies/` — Tüm işletmeler listelenir; her biri için "Randevu al" ile ilgili işletmenin randevu sayfasına (`/b/<slug>/`) gidilir.
 
 Herkese açık randevu sayfası: `/b/demo-salon/`
 

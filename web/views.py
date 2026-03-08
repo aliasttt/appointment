@@ -27,6 +27,12 @@ def pricing(request):
     return render(request, "web/pricing.html")
 
 
+def business_list(request):
+    """List all businesses; users can open each one's booking page to request an appointment."""
+    businesses = Business.objects.prefetch_related("services").order_by("name")
+    return render(request, "web/business_list.html", {"businesses": businesses})
+
+
 @require_http_methods(["GET", "POST"])
 def auth_login(request):
     if request.user.is_authenticated:

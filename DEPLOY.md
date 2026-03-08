@@ -11,44 +11,29 @@
 
 ## اسکریپت استقرار
 
-این اسکریپت را با کاربری که به `sudo` دسترسی دارد اجرا کنید (یک‌بار یا از CI/CD):
+این اسکریپت را با کاربری که به `sudo` دسترسی دارد اجرا کنید (یک‌بار یا از CI/CD). **دستورات `systemctl` و `curl` حتماً خارج از بلوک `bash -lc` باشند** تا بعد از به‌روزرسانی کد، سرویس ریستارت و سپس سلامت سایت چک شود.
 
 ```bash
-sudo -u root bash -lc "
+sudo -u root bash -lc '
 cd /srv/appointment || exit 1
-
-# Git
 git config --global --add safe.directory /srv/appointment
 git fetch origin
 git reset --hard origin/main || exit 1
-
-# Load ENV
 set -a
 source /etc/appointment.env
 set +a
-
-# Activate venv
 source /srv/appointment/venv/bin/activate
-
-# Install new packages if requirements changed
 pip install -r requirements.txt || exit 1
-
-# Django tasks
 python manage.py migrate --noinput || exit 1
 python manage.py collectstatic --noinput || exit 1
+'
 
-# Optional: clear cache if you add it later
-# python manage.py clear_cache
-
-"
-
-# Restart services
 sudo systemctl restart appointment
 sudo systemctl reload nginx
-
-# Health check
 curl -I https://heryerrandevu.com.tr | head -n 20
 ```
+
+خروجی موفق: در پاسخ `curl` خط `HTTP/2 200` به‌معنای در دسترس بودن سایت است. اگر بعد از دپلوی کد جدید لود نمی‌شود، حتماً `systemctl restart appointment` اجرا شده باشد.
 
 ## توضیح مراحل
 
