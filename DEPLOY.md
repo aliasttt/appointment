@@ -30,7 +30,6 @@ pip install -r requirements.txt || exit 1
 python manage.py migrate --noinput || exit 1
 python manage.py collectstatic --noinput || exit 1
 
-python manage.py createsuperuser
 '
 
 sudo systemctl restart appointment
@@ -73,9 +72,15 @@ heryerrandevu2233#
 | `systemctl reload nginx` | بارگذاری مجدد پیکربندی nginx |
 | `curl -I https://...` | بررسی اولیهٔ در دسترس بودن سایت |
 
-## Nginx: سرو فایل‌های استاتیک (ادمین و استاتیک اپ)
+## ادمین جنگو بدون استایل (صفحه ورود سوپریوزر خراب)
 
-اگر ادمین جنگو بدون استایل (بدون CSS) نمایش داده می‌شود، nginx باید مسیر `/static/` را از همان پوشه‌ای که `collectstatic` پر می‌کند سرو کند. داخل بلوک `server` مربوط به همین سایت، قبل از `location /` این بلوک را اضافه کنید:
+پروژه از **WhiteNoise** استفاده می‌کند تا فایل‌های استاتیک (CSS/آیکن ادمین) را خود اپ سرو کند. بعد از دیپلوی، حتماً این کارها را انجام دهید:
+
+1. **روی سرور** بعد از `git pull` و اجرای اسکریپت دیپلوی، وابستگی جدید نصب می‌شود (`whitenoise` در `requirements.txt`).
+2. حتماً **`collectstatic`** در اسکریپت اجرا شود تا فایل‌های ادمین در `staticfiles` کپی شوند.
+3. بعد از `systemctl restart appointment` درخواست‌های `/static/` را خود Django (با WhiteNoise) جواب می‌دهد و صفحه ورود ادمین با ظاهر پیش‌فرض لود می‌شود.
+
+اگر باز هم استایل نیامد، در nginx بلوک `server` مربوط به این دامنه، **قبل از** `location /` این را اضافه کنید (تا nginx خودش فایل استاتیک سرو کند):
 
 ```nginx
 location /static/ {
@@ -83,7 +88,7 @@ location /static/ {
 }
 ```
 
-سپس `sudo nginx -t` و `sudo systemctl reload nginx` را اجرا کنید. مطمئن شوید بعد از هر deploy دستور `python manage.py collectstatic --noinput` اجرا شده باشد.
+سپس `sudo nginx -t` و `sudo systemctl reload nginx`. نمونهٔ کامل در `deploy/nginx-appointment.conf.example` است.
 
 ## نکات
 
