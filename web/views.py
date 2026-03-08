@@ -62,17 +62,19 @@ def auth_register(request):
         return redirect("web:dashboard")
     form = RegisterForm(data=request.POST or None)
     if request.method == "POST" and form.is_valid():
+        phone = (form.cleaned_data.get("phone") or "").strip() or None
         user = User.objects.create_user(
             email=form.cleaned_data["email"],
             password=form.cleaned_data["password"],
             role=User.Role.OWNER,
+            phone=phone,
         )
         trial_ends = timezone.now() + timedelta(days=7)
         business = Business.objects.create(
             owner=user,
             name=form.cleaned_data["business_name"],
             slug=form.cleaned_data["business_slug"],
-            phone=form.cleaned_data.get("phone", ""),
+            phone=form.cleaned_data.get("phone", "") or "",
             address=form.cleaned_data.get("address", ""),
             trial_ends_at=trial_ends,
         )

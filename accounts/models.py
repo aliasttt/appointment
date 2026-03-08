@@ -24,7 +24,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
-        extra_fields.setdefault("role", User.Role.OWNER)
+        extra_fields.setdefault("role", "SUPERADMIN")
 
         if extra_fields.get("is_staff") is not True:
             raise ValueError("Süper kullanıcı is_staff=True olmalıdır.")
@@ -36,13 +36,21 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     class Role(models.TextChoices):
+        SUPERADMIN = "SUPERADMIN", "Süper Admin"
         OWNER = "OWNER", "İşletme Sahibi"
         STAFF = "STAFF", "Personel"
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = None
     email = models.EmailField("E-posta", unique=True)
-    phone = models.CharField("Telefon", max_length=20, blank=True)
+    phone = models.CharField(
+        "Telefon",
+        max_length=20,
+        blank=True,
+        null=True,
+        unique=True,
+        help_text="İşletme sahibi için benzersiz olmalıdır.",
+    )
     role = models.CharField(
         "Rol",
         max_length=20,

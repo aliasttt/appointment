@@ -33,6 +33,12 @@ DEBUG = env("DJANGO_DEBUG", default=True)
 
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["*"])
 
+# بعد از دپلوی اگر لاگین ادمین/وب کار نکرد، این مقدار را در env تنظیم کنید (مثلاً https://heryerrandevu.com.tr)
+CSRF_TRUSTED_ORIGINS = env.list(
+    "CSRF_TRUSTED_ORIGINS",
+    default=[],
+)
+
 
 # Application definition
 

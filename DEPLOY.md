@@ -6,7 +6,7 @@
 
 - سرور با دسترسی `sudo`
 - نصب: Git, Python 3.12+, pip, venv, nginx
-- فایل env در `/etc/appointment.env` (مقادیر `DJANGO_SECRET_KEY`, `DJANGO_DEBUG`, `DB_*`, و در صورت نیاز `CORS_ALLOWED_ORIGINS`)
+- فایل env در `/etc/appointment.env` (مقادیر `DJANGO_SECRET_KEY`, `DJANGO_DEBUG`, `DB_*`, و در صورت نیاز `CORS_ALLOWED_ORIGINS`, `CSRF_TRUSTED_ORIGINS`)
 - سرویس systemd با نام `appointment` و nginx برای پروکسی به اپ
 
 ## اسکریپت استقرار
@@ -29,6 +29,7 @@ source /srv/appointment/venv/bin/activate
 pip install -r requirements.txt || exit 1
 python manage.py migrate --noinput || exit 1
 python manage.py collectstatic --noinput || exit 1
+
 
 '
 
@@ -56,6 +57,16 @@ heryerrandevu2233#
 
 
 خروجی موفق: در پاسخ `curl` خط `HTTP/2 200` به‌معنای در دسترس بودن سایت است. اگر بعد از دپلوی کد جدید لود نمی‌شود، حتماً `systemctl restart appointment` اجرا شده باشد.
+
+## لاگین بعد از دپلوی خطا می‌دهد (CSRF)
+
+اگر بعد از دپلوی با ایمیل و رمز درست لاگین می‌کنید ولی صفحه رفرش می‌شود و وارد نمی‌شوید (یا خطای ۴۰۳)، معمولاً **CSRF** است چون درخواست از دامنهٔ HTTPS ارسال می‌شود. در `/etc/appointment.env` این متغیر را تنظیم کنید (با کاما جدا کنید اگر چند دامنه دارید):
+
+```bash
+CSRF_TRUSTED_ORIGINS=https://heryerrandevu.com.tr,https://www.heryerrandevu.com.tr
+```
+
+بعد از تغییر env حتماً سرویس را ریستارت کنید: `sudo systemctl restart appointment`.
 
 ## ورود کار نمی‌کند / خطا نمایش داده نمی‌شود
 

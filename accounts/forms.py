@@ -81,6 +81,14 @@ class RegisterForm(forms.Form):
             raise forms.ValidationError("Şifreler eşleşmiyor.")
         return self.cleaned_data["password_confirm"]
 
+    def clean_phone(self):
+        phone = (self.cleaned_data.get("phone") or "").strip()
+        if not phone:
+            return phone or None
+        if User.objects.filter(phone=phone).exists():
+            raise forms.ValidationError("Bu telefon numarası zaten kayıtlı.")
+        return phone
+
     def clean_business_slug(self):
         slug = self.cleaned_data.get("business_slug")
         if slug and Business.objects.filter(slug=slug).exists():
